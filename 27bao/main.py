@@ -98,5 +98,4 @@ def storage(link, description, images):
 	fo.write(rule + "\n")
 	fo.close()
 
-
 recursion()
