@@ -35,7 +35,7 @@ def location(ratio, num_points):
 
 
 if __name__ == "__main__":
-	ratio = int(input("Input the ratio you want: "))
+	ratio = float(input("Input the ratio you want: "))
 	points = int(input("Input the number of points you want: "))
 	fig, ax = plt.subplots(num=1, clear=True)
 	
