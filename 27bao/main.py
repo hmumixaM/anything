@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-import json
 import re
 import requests
 
@@ -13,7 +12,6 @@ def recursion():
 		list_link = list_link + str(i) + ".html"
 		page = requests.get(list_link)
 		page.encoding = 'UTF-8'
-		print list_link
 		page_match(page)
 
 # Identify links from webpages
@@ -89,13 +87,5 @@ def next_page(page):
 		return link
 
 
-# Store to JSON
-
-def storage(link, description, images):
-	data = {"link": link, "description": description, "images": images}
-	rule = json.dumps(data)
-	fo = open("links.txt","a")
-	fo.write(rule + "\n")
-	fo.close()
-
-recursion()
+if __name__ == '__main__':
+    recursion()
