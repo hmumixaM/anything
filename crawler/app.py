@@ -1,17 +1,23 @@
 import requests
 import re
 import pymongo
+import time
+
+client = pymongo.MongoClient(host='127.0.0.1', port=27017)
+db = client.baola
+collection = db.gif
+
+
+def data(info):
+    result = collection.insert_one(info)
 
 
 def main():
-    client = pymongo.MongoClient(host='127.0.0.1', port=27017)
-    db = client.baola
-    collection = db.gif
     pages = list_link()
     for link in pages:
         gifs, description = gif_match(link)
         info = {"title": description, "gif": gifs}
-        result = collection.insert_one(info)
+        data(info)
 
 
 def list_link():
@@ -49,12 +55,13 @@ def gif_match(link):
         image_text = download(image)
         info = match(image_text, r"<img alt=\".+\.gif", "search")
         gif_href = match(info, r"http.+\.gif", "search")
-        gif_alt = match(info, r"alt=\".{5,40}\"", "search")[5:-1]
+        gif_alt = match(info, r"alt=\".{5,40}\"", "search")[5:-7]
         gifs.append([gif_href, gif_alt])
     return gifs, description
     
 
 def download(link):
+    # time.sleep(1.0)
     response = requests.get(link)
     response.encoding = "UTF-8"
     return response.text
@@ -70,4 +77,10 @@ def match(text, regex, mode="findall"):
 
 
 if __name__ == '__main__':
-    main()
+    fo = open("page.txt", "r")
+    a = fo.readlines()
+    for i in a[1187:]:
+        link = i.split("@")
+        gifs, description = gif_match(link)
+        info = {"title": description, "gif": gifs}
+        data(info)

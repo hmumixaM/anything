@@ -8,7 +8,7 @@ def simple_download():
 		js = json.loads(line[i])
 		for j in range(0,len(js["images"])):
 			url = str(js["images"][j][0])
-			print url
+			print(url)
 			name = str(j) + "s" + str(i) + ".gif"
 			urllib.urlretrieve(url, name)
 	fo.close()
