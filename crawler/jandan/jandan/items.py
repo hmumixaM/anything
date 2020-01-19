@@ -9,6 +9,10 @@ import scrapy
 
 
 class JandanItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    comment = scrapy.Field()
+    security = scrapy.Field()
+    id = scrapy.Field()
+    content = scrapy.Field()
+    xx = scrapy.Field()
+    oo = scrapy.Field()
+    name = scrapy.Field()
