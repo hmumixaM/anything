@@ -5,6 +5,7 @@ import json
 import pytz
 from datetime import datetime, timedelta
 from jandan.items import TucaoItem
+import re
 
 from scrapy.spidermiddlewares.httperror import HttpError
 
@@ -39,7 +40,7 @@ class OoxxSpider(scrapy.Spider):
         text = json.loads(response.body)
         item['hot_tucao'] = text['hot_tucao']
         item['tucao'] = text['tucao']
-        item['id'] = id
+        item['pid'] = int(re.search(r'\d+$', response.url).group())
         item['time'] = self.now
         yield item
     

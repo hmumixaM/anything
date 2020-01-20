@@ -56,16 +56,14 @@ class DatabasePipeline(object):
     def __init__(self):
         client = pymongo.MongoClient(host='127.0.0.1', port=27017)
         db = client.jandan
-        if isinstance(self, TucaoItem):
-            self.collection = db.tucao
-        else:
-            self.collection = db.comments
+        self.comments = db.tucao
+        self.collection = db.comments
     
     def process_item(self, item, spider):
-        if isinstance(self, TucaoItem):
-            result = self.collection.insert_one(dict(item))
+        if isinstance(item, TucaoItem):
+            result = self.comments.insert_one(dict(item))
+            return item
         else:
-            if not self.collection.find_one({'id': item['id']}):
+            if not self.collection.find_one({'pid': item['pid']}):
                 result = self.collection.insert_one(dict(item))
             return item
-    
