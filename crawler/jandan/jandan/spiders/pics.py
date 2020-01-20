@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+import base64
+from datetime import datetime
+from jandan.items import JsonItem, PageItem
+
+import json
+import pytz
 import scrapy
 from scrapy.spidermiddlewares.httperror import HttpError
-from datetime import datetime, timedelta
-import pytz, json, base64, pymongo
 
 
 class PicsSpider(scrapy.Spider):
@@ -18,73 +22,50 @@ class PicsSpider(scrapy.Spider):
                                  dont_filter=True)
     
     def parse(self, response):
-        tzCN = pytz.timezone('Asia/Shanghai')
-        CNTime = datetime.now(tzCN)
-        prefix = str(CNTime.year) + str(CNTime.month) + str(CNTime.day)
+        cn_time = datetime.now(pytz.timezone('Asia/Shanghai'))
+        prefix = str(cn_time.year) + str(cn_time.month) + str(cn_time.day)
         total_page = response.xpath('//*[@id="comments"]/div[2]/div/span/text()').extract()
         if 'pic' in response.url:
             url = 'http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_pic_comments&page='
-            # for n in range(int(total_page[0][1:-1])):
-            for n in range(1, 2):
+            for n in range(int(total_page[0][1:-1])):
+                # for n in range(1, 2):
                 yield scrapy.Request(url + str(n), callback=self.parse_json,
                                      errback=self.error_callback,
                                      dont_filter=True)
-        # elif 'ooxx' in response.url:
-        #     url = 'http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page='
-        #     # for n in range(int(total_page[0][1:-1])):
-        #     for n in range(1, 2):
-        #         yield scrapy.Request(url + str(n), callback=self.parse_json,
-        #                              errback=self.error_callback,
-        #                              dont_filter=True)
-        # else:
-        #     # for n in range(int(total_page[0][1:-1])):
-        #     for n in range(1, 2):
-        #         url = response.url + '/' + base64.b64encode((prefix + '-' + str(n)).encode('utf-8')).decode('utf-8')
-        #         yield scrapy.Request(url, callback=self.page_parse,
-        #                              errback=self.error_callback,
-        #                              dont_filter=True)
+        elif 'ooxx' in response.url:
+            url = 'http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page='
+            for n in range(int(total_page[0][1:-1])):
+                # for n in range(1, 2):
+                yield scrapy.Request(url + str(n), callback=self.parse_json,
+                                     errback=self.error_callback,
+                                     dont_filter=True)
+        else:
+            for n in range(int(total_page[0][1:-1])):
+                # for n in range(1, 2):
+                url = response.url + '/' + base64.b64encode((prefix + '-' + str(n)).encode('utf-8')).decode('utf-8')
+                yield scrapy.Request(url, callback=self.page_parse,
+                                     errback=self.error_callback,
+                                     dont_filter=True)
     
     def parse_json(self, response):
+        item = JsonItem()
         text = json.loads(response.body)
         for i in range(text['count']):
-            comment = text['comments'][i]
-            id = comment['comment_ID']
-            name = comment['comment_author']
-            oo = comment['vote_positive']
-            xx = comment['vote_negative']
-            content = comment['comment_content']
-            time = comment['comment_date']
+            item['content'] = text['comments'][i]
+            yield item
     
     def page_parse(self, response):
+        item = PageItem()
         comment_list = response.xpath('//div[@id="comments"]/ol/li')
         for comments in comment_list:
             comment = comments.xpath('div/div')
-            id = comment.xpath('div[2]/span/a/text()').extract_first()
-            security = comment.xpath('div[1]/strong//@title').extract_first()[4:]
-            name = comment.xpath('div[1]/strong/text()').extract_first()
-            oo = comment.xpath('div[3]/span[2]/span/text()').extract_first()
-            xx = comment.xpath('div[3]/span[3]/span/text()').extract_first()
-            content = comment.xpath('div[2]/p').extract_first()
-            time = comment.xpath('div[1]/small/a/text()').extract_first()[1:-3]
-            if '周' in time:
-                delta = timedelta(weeks=-1 * int(time[:-2]))
-            elif '天' in time:
-                delta = timedelta(days=-1 * int(time[:-2]))
-            elif '小时' in time:
-                delta = timedelta(hours=-1 * int(time[:-3]))
-            elif '分钟' in time:
-                delta = timedelta(minutes=-1 * int(time[:-3]))
-            elif '秒' in time:
-                delta = timedelta(seconds=-1 * int(time[:-2]))
-            now = datetime.now()
-            time = (now + delta).strftime('%Y-%m-%d %H:%M:%S')
-            yield scrapy.Request('http://jandan.net/tucao/all/' + id,
-                                 callback=self.comment_update,
-                                 errback=self.error_callback,
-                                 dont_filter=True)
-    
-    def comment_update(self, response):
-        text = json.loads(response.body)
+            item['pid'] = comment.xpath('div[2]/span/a/text()').extract_first()
+            item['name'] = comment.xpath('div[1]/strong/text()').extract_first()
+            item['oo'] = comment.xpath('div[3]/span[2]/span/text()').extract_first()
+            item['xx'] = comment.xpath('div[3]/span[3]/span/text()').extract_first()
+            item['content'] = comment.xpath('div[2]/p').extract_first()
+            item['time'] = comment.xpath('div[1]/small/a/text()').extract_first()[1:-3]
+            yield item
     
     def error_callback(self, failure):
         self.logger.error(repr(failure))

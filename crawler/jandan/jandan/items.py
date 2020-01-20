@@ -8,11 +8,26 @@
 import scrapy
 
 
-class JandanItem(scrapy.Item):
-    comment = scrapy.Field()
-    security = scrapy.Field()
-    id = scrapy.Field()
+class JsonItem(scrapy.Item):
+    pid = scrapy.Field()
     content = scrapy.Field()
     xx = scrapy.Field()
     oo = scrapy.Field()
     name = scrapy.Field()
+    time = scrapy.Field()
+    tucao = scrapy.Field()
+    
+class PageItem(scrapy.Item):
+    pid = scrapy.Field()
+    content = scrapy.Field()
+    xx = scrapy.Field()
+    oo = scrapy.Field()
+    name = scrapy.Field()
+    time = scrapy.Field()
+    tucao = scrapy.Field()
+
+class TucaoItem(scrapy.Item):
+    pid = scrapy.Field()
+    hot_tucao = scrapy.Field()
+    tucao = scrapy.Field()
+    time = scrapy.Field()
