@@ -75,7 +75,6 @@ DOWNLOAD_DELAY = 0.25
 ITEM_PIPELINES = {
    'jandan.pipelines.JandanPipeline': 300,
    'jandan.pipelines.PagePiepline': 200,
-   'jandan.pipelines.UpdatePipeline': 800,
    'jandan.pipelines.DatabasePipeline': 1000
 }
 

@@ -61,33 +61,19 @@ class DatabasePipeline(object):
     
     def process_item(self, item, spider):
         if isinstance(item, TucaoItem):
-            result = self.comments.insert_one(dict(item))
-            return item
+            if not self.comments.find_one({'pid': item['pid']}):
+                result = self.comments.insert_one(dict(item))
+                return item
+            else:
+                result = self.comments.update_one({'pid': item['pid']}, item)
+                return item
         else:
             if not self.collection.find_one({'pid': item['pid']}):
                 result = self.collection.insert_one(dict(item))
-            return item
-
-
-class UpdatePipeline(object):
-    def __init__(self):
-        client = pymongo.MongoClient(host='127.0.0.1', port=27017)
-        db = client.jandan
-        self.comments = db.tucao
-        self.collection = db.comments
-    
-    def process_item(self, item, spider):
-        if isinstance(item, OOXXItem):
-            content = self.collection.find_one({'pid': item['pid']})
-            content['oo'] = item['oo']
-            content['xx'] = item['xx']
-            result = self.collection.update_one({'pid': item['pid']}, content)
-            return item
-        elif isinstance(item, TucaoItem):
-            if not self.collection.find_one({'pid': item['pid']}):
-                result = self.comments.insert_one(dict(item))
+                return item
             else:
-                result = self.comments.update_one({'pid': item['pid']}, item)
-            return item
-        else:
-            return item
+                content = self.collection.find_one({'pid': item['pid']})
+                content['oo'] = item['oo']
+                content['xx'] = item['xx']
+                result = self.collection.update_one({'pid': item['pid']}, content)
+                return item
