@@ -31,3 +31,8 @@ class TucaoItem(scrapy.Item):
     hot_tucao = scrapy.Field()
     tucao = scrapy.Field()
     time = scrapy.Field()
+    
+class OOXXItem(scrapy.Item):
+    pid = scrapy.Field()
+    oo = scrapy.Field()
+    xx = scrapy.Field()
