@@ -22,17 +22,13 @@ class OoxxSpider(scrapy.Spider):
         comments = db.comments
         cn_time = datetime.now(pytz.timezone('Asia/Shanghai'))
         self.now = cn_time.strftime("%Y-%m-%d %H:%M:%S")
-        past = (cn_time - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+        past = (cn_time - timedelta(days=4)).strftime("%Y-%m-%d %H:%M:%S")
         self.result = comments.find({"time": {"$gt": past}})
         client.close()
     
     def start_requests(self):
-        i = 0
         for item in self.result:
-            i += 1
-            print(i)
             id = item['pid']
-            print(id)
             url = self.prefix + str(id)
             yield scrapy.Request(url, callback=self.parse,
                                  errback=self.error_callback,

@@ -9,6 +9,7 @@ import scrapy
 
 
 class JsonItem(scrapy.Item):
+    type = scrapy.Field()
     pid = scrapy.Field()
     content = scrapy.Field()
     xx = scrapy.Field()
@@ -18,6 +19,7 @@ class JsonItem(scrapy.Item):
     tucao = scrapy.Field()
     
 class PageItem(scrapy.Item):
+    type = scrapy.Field()
     pid = scrapy.Field()
     content = scrapy.Field()
     xx = scrapy.Field()

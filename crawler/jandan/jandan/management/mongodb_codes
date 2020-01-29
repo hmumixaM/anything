@@ -1,0 +1,6 @@
+// Find duplicate elements in the database
+db.getCollection('tucao').aggregate([
+    { '$group': { '_id': {'pid': '$pid'}, 'count': {'$sum': 1 } } },
+    { '$match': { 'count': { '$gt': 1} } }
+])
+

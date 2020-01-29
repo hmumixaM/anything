@@ -12,7 +12,7 @@ from scrapy.spidermiddlewares.httperror import HttpError
 class PicsSpider(scrapy.Spider):
     name = 'pics'
     allowed_domains = ['jandan.net']
-    start_urls = ['http://jandan.net/pic/', 'http://jandan.net/t/treehole/', 'http://jandan.net/t/zoo/',
+    start_urls = ['http://jandan.net/pic/', 'http://jandan.net/treehole/', 'http://jandan.net/zoo/',
                   'http://jandan.net/qa/', 'http://jandan.net/ooxx/']
     
     def start_requests(self):
@@ -50,19 +50,23 @@ class PicsSpider(scrapy.Spider):
     def parse_json(self, response):
         item = JsonItem()
         text = json.loads(response.body)
+        pic_type = response.url[51:54]
         for i in range(text['count']):
+            item['type'] = pic_type
             item['content'] = text['comments'][i]
             yield item
     
     def page_parse(self, response):
         item = PageItem()
         comment_list = response.xpath('//div[@id="comments"]/ol/li')
+        pic_type = response.url[18:20]
         for comments in comment_list:
+            item['type'] = pic_type
             comment = comments.xpath('div/div')
-            item['pid'] = comment.xpath('div[2]/span/a/text()').extract_first()
+            item['pid'] = int(comment.xpath('div[2]/span/a/text()').extract_first())
             item['name'] = comment.xpath('div[1]/strong/text()').extract_first()
-            item['oo'] = comment.xpath('div[3]/span[2]/span/text()').extract_first()
-            item['xx'] = comment.xpath('div[3]/span[3]/span/text()').extract_first()
+            item['oo'] = int(comment.xpath('div[3]/span[2]/span/text()').extract_first())
+            item['xx'] = int(comment.xpath('div[3]/span[3]/span/text()').extract_first())
             item['content'] = comment.xpath('div[2]/p').extract_first()
             item['time'] = comment.xpath('div[1]/small/a/text()').extract_first()[1:-3]
             yield item
