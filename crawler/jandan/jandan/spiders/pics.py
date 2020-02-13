@@ -12,8 +12,8 @@ from scrapy.spidermiddlewares.httperror import HttpError
 class PicsSpider(scrapy.Spider):
     name = 'pics'
     allowed_domains = ['jandan.net']
-    start_urls = ['http://jandan.net/pic/', 'http://jandan.net/treehole/', 'http://jandan.net/zoo/',
-                  'http://jandan.net/qa/', 'http://jandan.net/ooxx/']
+    start_urls = ['http://i.jandan.net/pic/', 'http://i.jandan.net/treehole/', 'http://i.jandan.net/zoo/',
+                  'http://i.jandan.net/qa/', 'http://i.jandan.net/ooxx/']
     
     def start_requests(self):
         for u in self.start_urls:
@@ -24,23 +24,23 @@ class PicsSpider(scrapy.Spider):
     def parse(self, response):
         cn_time = datetime.now(pytz.timezone('Asia/Shanghai'))
         prefix = str(cn_time.year) + str(cn_time.month) + str(cn_time.day)
-        total_page = response.xpath('//*[@id="comments"]/div[2]/div/span/text()').extract()
+        total_page = response.xpath('//*[@id="comments"]/p[@class="wp-pagenavi"]/span/text()').extract_first()
         if 'pic' in response.url:
             url = 'http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_pic_comments&page='
-            for n in range(int(total_page[0][1:-1])):
+            for n in range(int(total_page[1:-1])):
                 # for n in range(1, 2):
                 yield scrapy.Request(url + str(n), callback=self.parse_json,
                                      errback=self.error_callback,
                                      dont_filter=True)
         elif 'ooxx' in response.url:
             url = 'http://i.jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page='
-            for n in range(int(total_page[0][1:-1])):
+            for n in range(int(total_page[1:-1])):
                 # for n in range(1, 2):
                 yield scrapy.Request(url + str(n), callback=self.parse_json,
                                      errback=self.error_callback,
                                      dont_filter=True)
         else:
-            for n in range(int(total_page[0][1:-1])):
+            for n in range(int(total_page[1:-1])):
                 # for n in range(1, 2):
                 url = response.url + '/' + base64.b64encode((prefix + '-' + str(n)).encode('utf-8')).decode('utf-8')
                 yield scrapy.Request(url, callback=self.page_parse,
@@ -58,17 +58,19 @@ class PicsSpider(scrapy.Spider):
     
     def page_parse(self, response):
         item = PageItem()
+        with open("hel.html", 'w') as file:
+            file.write(response.text)
         comment_list = response.xpath('//div[@id="comments"]/ol/li')
-        pic_type = response.url[18:20]
-        for comments in comment_list:
+        pic_type = response.url[20:22]
+        print(len(comment_list))
+        for comment in comment_list:
             item['type'] = pic_type
-            comment = comments.xpath('div/div')
-            item['pid'] = int(comment.xpath('div[2]/span/a/text()').extract_first())
-            item['name'] = comment.xpath('div[1]/strong/text()').extract_first()
-            item['oo'] = int(comment.xpath('div[3]/span[2]/span/text()').extract_first())
-            item['xx'] = int(comment.xpath('div[3]/span[3]/span/text()').extract_first())
-            item['content'] = comment.xpath('div[2]/p').extract_first()
-            item['time'] = comment.xpath('div[1]/small/a/text()').extract_first()[1:-3]
+            item['name'] = comment.xpath('b/text()').extract_first()
+            item['pid'] = int(comment.xpath('span[@class="righttext"]/a/text()').extract_first())
+            item['oo'] = int(comment.xpath('div[@class="jandan-vote"]/span[2]/span/text()').extract_first())
+            item['xx'] = int(comment.xpath('div[@class="jandan-vote"]/span[3]/span/text()').extract_first())
+            item['content'] = comment.xpath('div[@class="commenttext"]/p').extract_first()
+            item['time'] = comment.xpath('span[@class="time"]/text()').extract_first()[1:-3]
             yield item
     
     def error_callback(self, failure):

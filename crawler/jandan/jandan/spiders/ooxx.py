@@ -15,6 +15,7 @@ class OoxxSpider(scrapy.Spider):
     allowed_domains = ['jandan.net']
     start_urls = ['http://jandan.net/']
     prefix = 'http://jandan.net/tucao/all/'
+    count = 0
     
     def __init__(self):
         client = pymongo.MongoClient(host='127.0.0.1', port=27017)
@@ -22,8 +23,8 @@ class OoxxSpider(scrapy.Spider):
         comments = db.comments
         cn_time = datetime.now(pytz.timezone('Asia/Shanghai'))
         self.now = cn_time.strftime("%Y-%m-%d %H:%M:%S")
-        past = (cn_time - timedelta(days=4)).strftime("%Y-%m-%d %H:%M:%S")
-        self.result = comments.find({"time": {"$gt": past}})
+        past = (cn_time - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+        self.result = comments.find({"time": {"$gt": past}}).sort('time', pymongo.DESCENDING)
         client.close()
     
     def start_requests(self):

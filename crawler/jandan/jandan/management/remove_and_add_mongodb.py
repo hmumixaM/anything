@@ -14,15 +14,21 @@ db = client.jandan
 tucao = db.tucao
 comments = db.comments
 
-posts = comments.find({'time': {'$gt': '2020-01-01 16:14:04'}})
+posts = tucao.find({'time': {'$gt': '2020-01-01 16:14:04'}})
 print(posts)
 
+count = 0
 for item in posts:
-    a = item['pid']
-    item['xx'] = int(item['xx'])
-    item['oo'] = int(item['oo'])
-    result = comments.replace_one({'pid': a}, item)
-    print(result)
+    if item['hot_tucao']:
+        count += 1
+        print(item['pid'])
+    # a = item['pid']
+    # item['xx'] = int(item['xx'])
+    # item['oo'] = int(item['oo'])
+    # result = comments.replace_one({'pid': a}, item)
+    # print(result)
+
+print(count)
 
 # list = [] # list of pid need to be removed
 # prefix = '' # hyperlink prefix here
