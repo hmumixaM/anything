@@ -35,7 +35,7 @@ def downloader(url):
 def parse(response):
     content = etree.HTML(response.text)
     item = {}
-    item['name'] = content.xpath('//div[@class="entry"]/b/text()')
+    item['name'] = content.xpath('//div[@class="entry"]/b/text()')[0]
     item['pid'] = int(content.xpath(response.url[22:]))
     images = content.xpath('//div[@class="entry"]/p/a/@href')
     text = content.xpath('//div[@class="entry"]/p/text()')
@@ -63,7 +63,6 @@ def init():
     prefix = "http://i.jandan.net/t/"
     while True:
         url = prefix + str(start)
-        sleep(pause)
         response = downloader(url)
         if response == 'error':
             continue
@@ -75,7 +74,7 @@ def init():
         elif response.status_code == 200:
             start += 1
             count = 0
-            pause = 0.5
+            pause = 8
             item = parse(response)
             # db(item)
         else:
@@ -85,6 +84,7 @@ def init():
             print('reach the limit')
             start -= 10
             count = 0
+            sleep(pause)
             pause *= 2
     
 
