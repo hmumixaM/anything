@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Don't Look at This</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        .res {
+            display: block;
+            height: auto;
+            width: 97%;
+        }
+        .page-header {
+            text-align: center;
+        }
+        li {
+            list-style: none;
+        }
+        .pagination {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <h3> {{ title }} </h3>
+</div>
+
+<div>
+    <ul>
+    {% for i in gifs %}
+        <li class="li">
+            <img class="res" src="{{ i[0][5:]}}" referrerpolicy="no-referrer" alt="{{i[1]}}"/>
+        </li>
+        <br>
+    {% endfor %}
+    </ul>
+</div>
+
+<nav class="text-center">
+<ul class="pagination pagination-lg">
+    {% if page != 1%}
+        <li><a href="/gif/{{ page-1 }}">&laquo;</a></li>
+    {% endif %}
+    {% for page in pages %}
+        <li><a href="/gif/{{ page }}"> {{ page }} </a></li>
+    {% endfor %}
+    {% if page < 1188 %}
+        <li><a href="{{ page+1 }}">&raquo;</a></li>
+    {% endif %}
+</ul>
+</nav>
+
+<br>
+<br>
+<br>
+
+</body>
+</html>
