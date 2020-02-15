@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "trusty-cacao-261909",
+  "private_key_id": "3ef56603cb7ff70bd950d1fa6a99bd5a315c1ba4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQDEGb+bvCnc3xIX\n6tbuUxdqahXcFDx4mcubduygaP613vvn9Zd2KPqUZCsr/7g80T2Y5EJJJb57m3Ph\ng13CChhqO3LPM5NBvhVYmbcR/l2i4CH6ALTpRigO4f47WYePjSWMqwaK5NYuyTP8\n28KolbKcL8IgolR8ELoydcdz04dtxlIcGjSq02YfW4oLZt693HMv5q6jGNrPnnum\nH67Mf5kUVuPqn2tE7pZ/xoTjrCvHyuIg5M0fEZjrwk2vXzrABT8ETCqbilHJc+7v\nYBQyRIfJ/xf1AdYk+NYSd3RhkQslv72KrVTdFc48Eh9e6ecUe/UjDmF5biRS97Fc\nFainA6EJAgMBAAECgf9dQuGdbx95q50vQsB1F49LTKiYwgcAVCRBC439u/FnDWVA\nK8ycpWCGshzWEAfO5LQmwmfD4e91WbkCxzcP0T1LSHqRkDW4Tm5YdMJcDFz72RxP\niYaAap0idtgx4aJW4wm4nJ2/8JTsK0ROPTWWd5s6LHxmiM0lM89ZsCnrK+58hb/c\nJzfnjUOGFeZMZUdsZX8thLgRfoUQIruAMLPYrSfmR1rOPzBQPBpXnYkvm0iimLo8\nvw2ACgsRI8uxsWVI7GbfiFTrOkWVMfudpRuKg+bnqz6lDKCFhkbIUVALNf/UrLtt\nezPL5pPb/33dU0cNz/OmT2IbfcPVUQQac2dAgd0CgYEA5P8XNVf68grL2MWz+XL8\nMTelysCnGWlJ7YIloocnG2Wj+kKXLMgt9LRMKW9a7Mt+izLlxm3JNCqYXqMcHvTy\nzWtTBAC4Sk86DL+ngQi0zLKCYXekwn4sOr10Sznu/p3l81FrgXzcjZFtsFU+fxhl\nxOY0vmNdJGo5dg9e8n+i/S0CgYEA2zmaOY0m8yIFE9Dn00ZNPRUiF75AKE9mVRTl\nHpeauGXExsjvjK9gnGBO+6zKNpefKH6cHdRPItKmzkevu6SNlT6yR9LxKxiFcQoh\nPRZhEPF9cxII7Jpj5dtiodLzb8tLuj0Dhgtf5CDCLzIBURv2ounFER/K1B89wpCY\nNXbw9M0CgYAEcOoLT8x/GzR+3L6zzMYVUkX126yh8ofLgmWmdEaO4na+qMHzzWIO\nx9xeRVmXFA89Ndx8764iQ902oKUv+IIo97bhcf4g+s5eZu0htICFI8UhjMd2Oioz\nbW8u8k2vRHKsOF0EYt6IJFTjQZP3tQpsOia1tomc5i59Gqk1vMH1dQKBgQDYa/54\nUIQiRPSUQomKxv2bjtBwdi6qXPBekFk9IVfqMPXZdScgUUbkOiPfTA75ZCgI9y0y\nOZXCgAmS3ax8Z5AqxZGFXJcf/35FQUXdI8nBy1YYkrZitmxm0HWH4lTXifCBtJhU\n7cfF1B1AMHKiWyPaY0RcinFXhlwXR14scfahBQKBgFcWWl5TaKvn6jnaF1MvCpVH\naxC/8CK40bcrzm9FE/lD4QV3PvTIJJvbSyRSq9iuKDISFQc/9UcR6o52E9GDYw5L\ncEG55fIlIoRvAUwb3z99WyRknbaDRu8Y+lAsJbaYahm++5C9rRGP/LT3Mg/xInN8\njWM9C6QKwTd2bn/PGR0z\n-----END PRIVATE KEY-----\n",
+  "client_email": "trusty-cacao-261909@appspot.gserviceaccount.com",
+  "client_id": "100183997905240875070",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/trusty-cacao-261909%40appspot.gserviceaccount.com"
+}

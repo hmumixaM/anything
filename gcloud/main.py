@@ -1,15 +1,39 @@
 # [START gae_python37_app]
 from flask import *
 from database import find
+from google.cloud import storage
+
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__, template_folder="templates")
+CLOUD_STORAGE_BUCKET = "trusty-cacao-261909.appspot.com"
 
 
 @app.route('/')
 def hello():
     return "<a href='gif/1'>gif page</a>"
+
+
+@app.route('/file')
+def file():
+    return render_template('file.html')
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    uploaded_file = request.files.get('file')
+    if not uploaded_file:
+        return 'No file uploaded.', 400
+    gcs = storage.Client.from_service_account_json("hello.json")
+    bucket = gcs.get_bucket("wx4.hellosinaimg.cn")
+    blob = bucket.blob(uploaded_file.filename)
+    blob.upload_from_string(
+        uploaded_file.read(),
+        content_type=uploaded_file.content_type
+    )
+
+    return render_template('upload.html', filename=uploaded_file.filename, url=blob.public_url)
 
 
 @app.errorhandler(404)
