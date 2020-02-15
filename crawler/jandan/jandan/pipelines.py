@@ -32,6 +32,7 @@ class JandanPipeline(object):
 class PagePiepline(object):
     def process_item(self, item, spider):
         if isinstance(item, PageItem):
+            item['time'] = self.time_normalization(item['time'])
             if item['type'] == 'zo':
                 item['type'] = 'zoo'
             elif item['type'] == 'tr':
@@ -39,6 +40,20 @@ class PagePiepline(object):
             return item
         else:
             return item
+    
+    def time_normalization(self, time):
+        if '周' in time:
+            delta = timedelta(weeks=-1 * int(time[:-2]))
+        elif '天' in time:
+            delta = timedelta(days=-1 * int(time[:-2]))
+        elif '小时' in time:
+            delta = timedelta(hours=-1 * int(time[:-3]))
+        elif '分钟' in time:
+            delta = timedelta(minutes=-1 * int(time[:-3]))
+        elif '秒' in time:
+            delta = timedelta(seconds=-1 * int(time[:-2]))
+        now = datetime.now()
+        return (now + delta).strftime('%Y-%m-%d %H:%M:%S')
 
 
 class DatabasePipeline(object):
