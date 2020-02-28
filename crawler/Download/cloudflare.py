@@ -1,5 +1,5 @@
 import cfscrape
 
 scraper = cfscrape.create_scraper()
-with open('a.html', 'w') as file:
-    file.write(scraper.get("http://javmost.com").text)
+with open('b.html', 'w') as file:
+    file.write(scraper.get("https://www5.javmost.com/MOND-183/").text)
