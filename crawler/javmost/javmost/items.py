@@ -10,12 +10,12 @@ import scrapy
 
 class ListItem(scrapy.Item):
     code = scrapy.Field()
-    name = scrapy.Field()
+    title = scrapy.Field()
     image = scrapy.Field()
     url = scrapy.Field()
     rating = scrapy.Field()
     star = scrapy.Field()
-    Genre = scrapy.Field()
+    genre = scrapy.Field()
     director = scrapy.Field()
     maker = scrapy.Field()
     tags = scrapy.Field()
