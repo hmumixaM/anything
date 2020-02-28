@@ -4,8 +4,9 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
+import cfscrape
 from scrapy import signals
+from scrapy.http import HtmlResponse
 
 
 class JavmostSpiderMiddleware(object):
@@ -60,6 +61,9 @@ class JavmostDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
+    
+    def __init__(self):
+        self.scraper = cfscrape.create_scraper()
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -69,6 +73,7 @@ class JavmostDownloaderMiddleware(object):
         return s
 
     def process_request(self, request, spider):
+        response = self.scraper.get(request.url)
         # Called for each request that goes through the downloader
         # middleware.
 
@@ -78,7 +83,7 @@ class JavmostDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        return None
+        return HtmlResponse(request.url, body=response.content, encoding='utf-8', request=request)
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

@@ -1,5 +1,7 @@
 import cfscrape
+import json
 
 scraper = cfscrape.create_scraper()
-with open('b.html', 'w') as file:
-    file.write(scraper.get("https://www5.javmost.com/MOND-183/").text)
+a = json.loads(scraper.get("https://www5.javmost.com/showlistcate/all/1/allcode/").content)
+print(a['status'])
+print(a['data'])

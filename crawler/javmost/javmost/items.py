@@ -8,7 +8,16 @@
 import scrapy
 
 
-class JavmostItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class ListItem(scrapy.Item):
+    code = scrapy.Field()
+    name = scrapy.Field()
+    image = scrapy.Field()
+    url = scrapy.Field()
+    rating = scrapy.Field()
+    star = scrapy.Field()
+    Genre = scrapy.Field()
+    director = scrapy.Field()
+    maker = scrapy.Field()
+    tags = scrapy.Field()
+    release_time = scrapy.Field()
+    duration = scrapy.Field()

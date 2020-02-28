@@ -8,4 +8,6 @@
 
 class JavmostPipeline(object):
     def process_item(self, item, spider):
+        with open("hello.txt", "a") as file:
+            file.write(item['page'])
         return item
