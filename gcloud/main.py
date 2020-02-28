@@ -11,7 +11,7 @@ app = Flask(__name__, template_folder="templates")
 
 @app.route('/')
 def hello():
-    return "<a href='gif/1'>gif page</a>"
+    return "<a href='gif/1'>gif page</a><br><a href='file/'>NetDisk</a>"
 
 
 @app.route('/file')
@@ -25,13 +25,14 @@ def upload():
     if not uploaded_file:
         return 'No file uploaded.', 400
     gcs = storage.Client.from_service_account_json("key.json")
-    bucket = gcs.get_bucket("wx4.hellosinaimg.cn")
+    bucket = gcs.get_bucket("ss.12450.xyz")
     blob = bucket.blob(uploaded_file.filename)
     blob.upload_from_string(
         uploaded_file.read(),
         content_type=uploaded_file.content_type
     )
-    return render_template('upload.html', filename=uploaded_file.filename, url=blob.public_url)
+    return blob.public_url
+    # return render_template('upload.html', filename=uploaded_file.filename, url=blob.public_url)
 
 
 @app.errorhandler(404)
