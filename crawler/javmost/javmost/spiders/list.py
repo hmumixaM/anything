@@ -28,20 +28,18 @@ class ListSpider(scrapy.Spider):
         pattern = re.compile(r"var YWRzMQo = .*?;")
         function = re.compile(r'''onclick="select_part\(.+?\)''')
         form = {}
-        print(item['url'])
         form["value"] = pattern.search(response.text)[0][15:-2]
-        print(form['value'])
         form["sound"] = 'av'
         select_part = function.findall(response.text)
         for i in select_part:
             parts = i.split(',')
-            print(parts[1])
             form["part"] = parts[0][22:-1]
             form["group"] = parts[1][1:-1]
             form["code"] = parts[4][1:-1]
             form["code2"] = parts[5][1:-1]
             form["code3"] = parts[6][1:-2]
             response = requests.post(url, data=form)
-            link = json.loads(response.text)['data'][0]
-            item['link'].append(link)
+            data = json.loads(response.text)
+            if not data['status'] == "error":
+                item['link'] += data['data']
         yield item

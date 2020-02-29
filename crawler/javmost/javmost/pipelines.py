@@ -29,5 +29,6 @@ class LinkPipeline(object):
         
     def process_item(self, item, spider):
         if isinstance(item, LinkItem):
-            # self.list.update_one({'url': item['url']}, {'$set': {'videos': item['link']}})
+            print(item['url'])
+            self.list.update_one({'url': item['url']}, {'$set': {'videos': item['link']}})
             print("Updated {}".format(item['url']))
