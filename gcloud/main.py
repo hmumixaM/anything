@@ -1,17 +1,19 @@
 # [START gae_python37_app]
 from flask import *
-from database import find
+from database import *
 from google.cloud import storage
 
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__, template_folder="templates")
-
+result, gif_num = find_gif(1)
+result, javmost_num =  find_javmost(1)
+javmost_num = int(javmost_num/12)
 
 @app.route('/')
 def hello():
-    return "<a href='gif/1'>gif page</a><br><a href='file/'>NetDisk</a>"
+    return "<a href='gif/1'>gif page</a><br><a href='file/'>NetDisk</a><br><a href='javmost/'>Javmost</a>"
 
 
 @app.route('/file')
@@ -41,27 +43,63 @@ def error():
 
 
 @app.route('/gif')
-def other():
+def other_gif():
     return redirect(url_for('gif', page=1))
 
+@app.route('/javmost')
+def other_javmost():
+    return redirect(url_for('javmost', page=1))
+
+@app.route('/gif/')
+def other_gif_again():
+    return redirect(url_for('gif', page=1))
+
+@app.route('/javmost/')
+def other_javmost_again():
+    return redirect(url_for('javmost', page=1))
 
 @app.route('/gif/<page>')
 def gif(page):
     if not page.isdigit():
         return redirect(url_for('gif', page=1))
     page = int(page)
-    if page <= 0 or page > 1188:
+    if page <= 0 or page > gif_num:
         return redirect(url_for('gif', page=1))
-    result = find(page-1)
+    result, max = find_gif(page-1)
     title = result['title']
     gifs = result['gif']
     if page <= 4:
         pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    elif page > 1181:
-        pages = range(1179, 1189)
+    elif page > gif_num - 7:
+        pages = range(gif_num, gif_num + 1)
     else:
         pages = range(page-3, page+7)
     return render_template('gif.html', page=page, pages=pages, title=title, gifs=gifs)
+
+
+@app.route('/javmost/<page>')
+def javmost(page):
+    if not page.isdigit():
+        return redirect(url_for('javmost', page=1))
+    page = int(page)
+    if page <= 0 or page > javmost_num:
+        return redirect(url_for('javmost', page=1))
+    videos, max = find_javmost(page)
+    if page <= 4:
+        pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    elif page > javmost_num - 8:
+        pages = range(javmost_num - 10, javmost_num)
+    else:
+        pages = range(page-3, page+7)
+    return render_template('jav.html', page=page, pages=pages, videos=videos)
+
+
+@app.route('/code/<code>/<order>')
+def code(code, order):
+    videos = find_video(code)
+    if videos == 'error':
+        return "No video here."
+    return render_template('watch.html', code=code, link=videos['videos'], order=int(order), length=len(videos['videos']))
 
 
 if __name__ == '__main__':
