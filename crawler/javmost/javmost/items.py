@@ -21,7 +21,4 @@ class ListItem(scrapy.Item):
     tags = scrapy.Field()
     release_time = scrapy.Field()
     duration = scrapy.Field()
-
-class LinkItem(scrapy.Item):
-    url = scrapy.Field()
-    link = scrapy.Field()
+    videos = scrapy.Field()

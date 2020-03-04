@@ -13,7 +13,7 @@ javmost_num = int(javmost_num/12)
 
 @app.route('/')
 def hello():
-    return "<a href='gif/1'>gif page</a><br><a href='file/'>NetDisk</a><br><a href='javmost/'>Javmost</a>"
+    return "<a href='gif/1'>gif page</a><br><a href='file'>NetDisk</a><br><a href='javmost/'>Javmost</a>"
 
 
 @app.route('/file')
