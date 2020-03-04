@@ -12,7 +12,7 @@ class JavmostPipeline(object):
         client = pymongo.MongoClient(uri)
         # client = pymongo.MongoClient(host='127.0.0.1', port=27017)
         db = client.javmost
-        self.list = db.list
+        self.list = db.av
     
     def process_item(self, item, spider):
         result = self.list.insert_one(dict(item))
