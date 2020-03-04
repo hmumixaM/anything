@@ -26,8 +26,7 @@ class GifSpider(scrapy.Spider):
         obj = response.meta['item']
         obj['link'] = []
         
-        
-        obj['link'].append(response.xpath("/html/body/div[1]/a/img/@src").extract_first())
+        obj['link'].append(response.xpath("//img/@src").extract()[1])
         max_page = response.xpath("//div[@class='paging']/span/text()").extract_first()
         max_page = int(max_page[0:-1].split('/')[1])
         
@@ -40,7 +39,7 @@ class GifSpider(scrapy.Spider):
         obj = response.meta['item']
         max_page = response.meta['max_page']
         order = response.meta['order']
-        obj['link'].append(response.xpath("/html/body/div[1]/a/img/@src").extract_first())
+        obj['link'].append(response.xpath("//img/@src").extract()[1])
         
         print(obj['url'])
         
