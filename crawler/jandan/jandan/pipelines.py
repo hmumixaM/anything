@@ -58,8 +58,9 @@ class PagePiepline(object):
 
 class DatabasePipeline(object):
     def __init__(self):
-        client = pymongo.MongoClient(host='127.0.0.1', port=27017)
-        db = client.jandan
+        uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
+        client = pymongo.MongoClient(uri)
+        db = client.code
         self.comments = db.tucao
         self.collection = db.comments
     

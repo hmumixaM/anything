@@ -18,12 +18,13 @@ class OoxxSpider(scrapy.Spider):
     count = 0
     
     def __init__(self):
-        client = pymongo.MongoClient(host='127.0.0.1', port=27017)
-        db = client.jandan
+        uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
+        client = pymongo.MongoClient(uri)
+        db = client.code
         comments = db.comments
         cn_time = datetime.now(pytz.timezone('Asia/Shanghai'))
         self.now = cn_time.strftime("%Y-%m-%d %H:%M:%S")
-        past = (cn_time - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+        past = (cn_time - timedelta(days=3)).strftime("%Y-%m-%d %H:%M:%S")
         self.result = comments.find({"time": {"$gt": past}}).sort('time', pymongo.DESCENDING)
         client.close()
     

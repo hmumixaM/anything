@@ -24,4 +24,5 @@ class ListItem(scrapy.Item):
 
 class LinkItem(scrapy.Item):
     url = scrapy.Field()
-    link = scrapy.Field()
+    # link = scrapy.Field()
+    form = scrapy.Field()

@@ -11,7 +11,9 @@ from javmost.items import ListItem, LinkItem
 
 class JavmostPipeline(object):
     def __init__(self):
-        client = pymongo.MongoClient(host='127.0.0.1', port=27017)
+        uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
+        client = pymongo.MongoClient(uri)
+        # client = pymongo.MongoClient(host='127.0.0.1', port=27017)
         db = client.javmost
         self.list = db.list
     
@@ -23,12 +25,16 @@ class JavmostPipeline(object):
 
 class LinkPipeline(object):
     def __init__(self):
-        client = pymongo.MongoClient(host='127.0.0.1', port=27017)
+        uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
+        client = pymongo.MongoClient(uri)
+        # client = pymongo.MongoClient(host='127.0.0.1', port=27017)
         db = client.javmost
-        self.list = db.list
+        # self.list = db.list
+        self.list = db.temp
         
     def process_item(self, item, spider):
         if isinstance(item, LinkItem):
             print(item['url'])
-            self.list.update_one({'url': item['url']}, {'$set': {'videos': item['link']}})
+            # self.list.update_one({'url': item['url']}, {'$set': {'videos': item['link']}})
+            self.list.insert_one(dict(item))
             print("Updated {}".format(item['url']))
