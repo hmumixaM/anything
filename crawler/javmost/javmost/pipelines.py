@@ -8,15 +8,12 @@ import pymongo
 
 class JavmostPipeline(object):
     def __init__(self):
-        client = pymongo.MongoClient(host='127.0.0.1', port=27017)
-        db = client.test
+        uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
+        client = pymongo.MongoClient(uri)
+        # client = pymongo.MongoClient(host='127.0.0.1', port=27017)
+        db = client.javmost
         self.list = db.list
     
     def process_item(self, item, spider):
-        item = self.list.find_one({"code": item["code"]})
-        if not item:
-            result = self.list.insert_one(dict(item))
-            print("Inserted {}".format(item['code']))
-        else:
-            result = self.list.replace_one(dict(item))
-            print("Updated {}".format(item['code']))
+        result = self.list.insert_one(dict(item))
+        print("Inserted {}".format(item['code']))
