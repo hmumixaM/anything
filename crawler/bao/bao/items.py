@@ -9,6 +9,6 @@ import scrapy
 
 
 class BaoItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    url = scrapy.Field()
+    link = scrapy.Field()
+    title = scrapy.Field()
