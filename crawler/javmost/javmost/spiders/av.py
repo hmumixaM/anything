@@ -91,5 +91,4 @@ class AvSpider(scrapy.Spider):
                                            "select_part": select_part,
                                            'form': form})
         else:
-            print(dict(item))
             yield item
