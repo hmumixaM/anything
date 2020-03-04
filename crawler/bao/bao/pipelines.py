@@ -12,7 +12,7 @@ import requests
 class BaoPipeline(object):
     def __init__(self):
         client = pymongo.MongoClient(host='127.0.0.1', port=27017)
-        self.new = client.baola.new
+        self.new = client.baola.boring
         self.counter = 0
         self.total = 0
     
