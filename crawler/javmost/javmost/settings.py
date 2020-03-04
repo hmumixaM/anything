@@ -52,9 +52,6 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-   'javmost.middlewares.JavmostDownloaderMiddleware': 543,
-}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -66,7 +63,6 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'javmost.pipelines.JavmostPipeline': 320,
-   'javmost.pipelines.LinkPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -6,9 +6,6 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import pymongo
 
-from javmost.items import ListItem, LinkItem
-
-
 class JavmostPipeline(object):
     def __init__(self):
         uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
@@ -18,6 +15,7 @@ class JavmostPipeline(object):
         self.list = db.list
     
     def process_item(self, item, spider):
+<<<<<<< HEAD
         if isinstance(item, ListItem):
             result = self.list.insert_one(dict(item))
             print("Inserted {}".format(item['code']))
@@ -38,3 +36,7 @@ class LinkPipeline(object):
             # self.list.update_one({'url': item['url']}, {'$set': {'videos': item['link']}})
             self.list.insert_one(dict(item))
             print("Updated {}".format(item['url']))
+=======
+        result = self.list.insert_one(dict(item))
+        print("Inserted {}".format(item['code']))
+>>>>>>> 719acac83420f73eedeb0662948362f7ed050774

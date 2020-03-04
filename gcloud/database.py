@@ -6,11 +6,26 @@ client = pymongo.MongoClient(uri)
 db = client.anything
 # db = client.baola
 collection = db.gif
+jav = client.javmost.list
 
-def find(page):
+def find_gif(page):
     a = collection.find({})
-    return a[page]
+    return a[page], a.count()
+
+
+def find_javmost(page):
+    a = jav.find({'videos': {"$exists": True}})
+    return a[12*(page-1):12*page], a.count()
+
+
+def find_video(code):
+    result = jav.find_one({'code': code})
+    if result['videos'] == []:
+        return "error"
+    return result
 
 
 if __name__ == '__main__':
-    a = find(1)
+    a = find_gif(1)
+    b = find_javmost(1)
+    print(b[5])

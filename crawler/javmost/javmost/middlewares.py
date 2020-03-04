@@ -73,7 +73,6 @@ class JavmostDownloaderMiddleware(object):
         return s
 
     def process_request(self, request, spider):
-        response = self.scraper.get(request.url)
         # Called for each request that goes through the downloader
         # middleware.
 
@@ -83,7 +82,7 @@ class JavmostDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        return HtmlResponse(request.url, body=response.content, encoding='utf-8', request=request)
+        return None
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

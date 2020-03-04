@@ -5,7 +5,7 @@
       <entry url="file://$PROJECT_DIR$">
         <entryData>
           <resourceRoots>
-            <path value="file://$PROJECT_DIR$/crawler/javmost" />
+            <path value="file://$PROJECT_DIR$/crawler/javmost/javmost" />
           </resourceRoots>
         </entryData>
       </entry>
