@@ -11,7 +11,7 @@ class AvSpider(scrapy.Spider):
     
     def start_requests(self):
         suffix = "https://www5.javmost.com/showlist/new/{}/release/"
-        for i in range(0, 2 + 1):
+        for i in range(0, 4349):
             link = suffix.format(i)
             yield scrapy.Request(link, callback=self.list_parse)
     
