@@ -26,8 +26,8 @@ class JavmostPipeline(object):
                 self.count += 1
                 result = self.list.insert_one(dict(item))
                 print("Inserted {}".format(item['code']))
-        if self.count == 1000:
-            self.total += 1000
+        if self.count == 2000:
+            self.total += 2000
             requests.post("http://sc.ftqq.com/SCU72004T10f9864d58946bb2bb99613bef2ab8f75e023341e73f2.send",
-                data={"text": "Another 1000 Pages: " + str(self.total), "desp": "nothing" + str(self.total)})
+                data={"text": "Another 2000 Pages: " + str(self.total), "desp": "nothing" + str(self.total)})
             self.count = 0

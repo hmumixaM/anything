@@ -73,16 +73,12 @@ class JavmostDownloaderMiddleware(object):
         return s
 
     def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
-
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-        return None
+        if request.method == "POST":
+            response = self.scraper.post(request.url, data=request.body)
+        else:
+            response = self.scraper.get(request.url)
+        
+        return HtmlResponse(request.url, body=response.content, encoding='utf-8', request=request)
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

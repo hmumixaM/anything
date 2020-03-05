@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 import re
+import requests
 import scrapy
 import json
 import pymongo
 from javmost.items import ListItem
 
 
+def check(response):
+    if response.status == 503:
+        requests.post("http://sc.ftqq.com/SCU72004T10f9864d58946bb2bb99613bef2ab8f75e023341e73f2.send",
+                      data={"text": "Javmost Video Spider Fail: 503", "desp": "503 ERROR"})
+
+
 class AvSpider(scrapy.Spider):
     name = 'av'
-    allowed_domains = ['www5.javmost.com'] 
+    allowed_domains = ['www5.javmost.com']
     
     def __init__(self):
         uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
@@ -70,13 +77,14 @@ class AvSpider(scrapy.Spider):
         form["code2"] = parts[5][1:-1]
         form["code3"] = parts[6][1:-2]
         
-        yield scrapy.FormRequest(url,
-                                 formdata=form,
-                                 callback=self.form_requests,
-                                 meta={"item": item,
-                                       "num": len(select_part) - 1,
-                                       "select_part": select_part,
-                                       'form': form})
+        yield scrapy.Request(url,
+                             method="POST",
+                             body=form,
+                             callback=self.form_requests,
+                             meta={"item": item,
+                                   "num": len(select_part) - 1,
+                                   "select_part": select_part,
+                                   'form': form})
     
     def form_requests(self, response):
         check(response)
@@ -84,12 +92,12 @@ class AvSpider(scrapy.Spider):
         data = json.loads(response.text)
         if data['status'] == "success":
             item['videos'] += data['data']
-
+        
         url = "https://www5.javmost.com/get_movie_source/"
         select_part = response.meta['select_part']
         num = response.meta['num']
         form = response.meta['form']
-
+        
         if num > 0:
             i = select_part[num - 1]
             parts = i.split(',')
@@ -98,17 +106,13 @@ class AvSpider(scrapy.Spider):
             form["code"] = parts[4][1:-1]
             form["code2"] = parts[5][1:-1]
             form["code3"] = parts[6][1:-2]
-            yield scrapy.FormRequest(url,
-                                     formdata=form,
-                                     callback=self.form_requests,
-                                     meta={"item": item,
-                                           "num": num - 1,
-                                           "select_part": select_part,
-                                           'form': form})
+            yield scrapy.Request(url,
+                                 method="POST",
+                                 body=form,
+                                 callback=self.form_requests,
+                                 meta={"item": item,
+                                       "num": len(select_part) - 1,
+                                       "select_part": select_part,
+                                       'form': form})
         if num == 0:
             yield item
-
-    def check(response):
-        if response.status == 503:
-            requests.post("http://sc.ftqq.com/SCU72004T10f9864d58946bb2bb99613bef2ab8f75e023341e73f2.send",
-                    data={"text": "Javmost Video Spider Fail: 503", "desp": "503 ERROR"})
