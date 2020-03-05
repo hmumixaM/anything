@@ -2,12 +2,22 @@
 import re
 import scrapy
 import json
+import pymongo
 from javmost.items import ListItem
 
 
 class AvSpider(scrapy.Spider):
     name = 'av'
-    allowed_domains = ['www5.javmost.com']
+    allowed_domains = ['www5.javmost.com'] 
+    
+    def __init__(self):
+        uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
+        client = pymongo.MongoClient(uri)
+        av = client.javmost.av
+        self.database = []
+        result = av.aggregate([{"$group": {"_id": {"code": "$code"}}}])
+        for i in result:
+            self.database.append(i['_id']["code"])
     
     def start_requests(self):
         suffix = "https://www5.javmost.com/showlist/new/{}/release/"
@@ -16,6 +26,7 @@ class AvSpider(scrapy.Spider):
             yield scrapy.Request(link, callback=self.list_parse)
     
     def list_parse(self, response):
+        check(response)
         data = json.loads(response.body)
         selector = scrapy.Selector(text=data['data'], type="html")
         cards = selector.xpath("//div[@class='card']")
@@ -23,6 +34,9 @@ class AvSpider(scrapy.Spider):
             item = ListItem()
             item['image'] = card.xpath("a/img/@data-src").extract_first()
             item['code'] = card.xpath("div/a[1]/h4/text()").extract_first()
+            if item['code'] in self.database:
+                item['title'] = "Crawled"
+                continue
             item['url'] = "https://www5.javmost.com/{}/".format(item['code'])
             item['title'] = card.xpath("div/a[2]/h5/text()").extract_first()
             item['release_time'] = card.xpath("div/p/text()[2]").extract_first().split('\t')[0].split(" ")[-1]
@@ -36,6 +50,7 @@ class AvSpider(scrapy.Spider):
             yield scrapy.Request(item['url'], callback=self.parse, meta={'item': item})
     
     def parse(self, response):
+        check(response)
         url = "https://www5.javmost.com/get_movie_source/"
         item = response.meta['item']
         item['videos'] = []
@@ -63,11 +78,11 @@ class AvSpider(scrapy.Spider):
                                        "select_part": select_part,
                                        'form': form})
     
-    def form_requests(self, response, *he):
+    def form_requests(self, response):
+        check(response)
         item = response.meta['item']
-        yield item
         data = json.loads(response.text)
-        if data['status'] != "error":
+        if data['status'] == "success":
             item['videos'] += data['data']
 
         url = "https://www5.javmost.com/get_movie_source/"
@@ -75,7 +90,7 @@ class AvSpider(scrapy.Spider):
         num = response.meta['num']
         form = response.meta['form']
 
-        if num != 0:
+        if num > 0:
             i = select_part[num - 1]
             parts = i.split(',')
             form["part"] = parts[0][22:-1]
@@ -90,5 +105,10 @@ class AvSpider(scrapy.Spider):
                                            "num": num - 1,
                                            "select_part": select_part,
                                            'form': form})
-        else:
+        if num == 0:
             yield item
+
+    def check(response):
+        if response.status == 503:
+            requests.post("http://sc.ftqq.com/SCU72004T10f9864d58946bb2bb99613bef2ab8f75e023341e73f2.send",
+                    data={"text": "Javmost Video Spider Fail: 503", "desp": "503 ERROR"})
