@@ -7,6 +7,7 @@
 import cfscrape
 from scrapy import signals
 from scrapy.http import HtmlResponse
+import json
 
 
 class JavmostSpiderMiddleware(object):
@@ -74,7 +75,7 @@ class JavmostDownloaderMiddleware(object):
 
     def process_request(self, request, spider):
         if request.method == "POST":
-            response = self.scraper.post(request.url, data=dict(request.body))
+            response = self.scraper.post(request.url, data=json.loads(request.body))
         else:
             response = self.scraper.get(request.url)
         
