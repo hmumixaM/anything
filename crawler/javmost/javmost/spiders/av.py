@@ -10,7 +10,7 @@ from javmost.items import ListItem
 def check(response):
     if response.status == 503:
         requests.post("http://sc.ftqq.com/SCU72004T10f9864d58946bb2bb99613bef2ab8f75e023341e73f2.send",
-                      data={"text": "Javmost Video Spider Fail: 503", "desp": "503 ERROR"})
+                      data={"text": "Javmost Video Spider Fail: 503", "desp": "503 ERROR. " + response.url})
 
 
 class AvSpider(scrapy.Spider):
@@ -76,10 +76,10 @@ class AvSpider(scrapy.Spider):
         form["code"] = parts[4][1:-1]
         form["code2"] = parts[5][1:-1]
         form["code3"] = parts[6][1:-2]
-        
+
         yield scrapy.Request(url,
                              method="POST",
-                             body=form,
+                             body=json.dumps(form),
                              callback=self.form_requests,
                              meta={"item": item,
                                    "num": len(select_part) - 1,
@@ -108,7 +108,7 @@ class AvSpider(scrapy.Spider):
             form["code3"] = parts[6][1:-2]
             yield scrapy.Request(url,
                                  method="POST",
-                                 body=form,
+                                 body=json.dumps(form),
                                  callback=self.form_requests,
                                  meta={"item": item,
                                        "num": len(select_part) - 1,
