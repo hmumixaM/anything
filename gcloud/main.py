@@ -42,6 +42,11 @@ def error():
     return redirect(url_for('hello'))
 
 
+@app.route('/mongo/<db>/<code>')
+def mongo(db, code):
+    return restful(db, code)
+
+
 @app.route('/gif')
 def other_gif():
     return redirect(url_for('gif', page=1))
