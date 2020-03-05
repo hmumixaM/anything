@@ -74,7 +74,7 @@ class JavmostDownloaderMiddleware(object):
 
     def process_request(self, request, spider):
         if request.method == "POST":
-            response = self.scraper.post(request.url, data=request.body)
+            response = self.scraper.post(request.url, data=dict(request.body))
         else:
             response = self.scraper.get(request.url)
         
