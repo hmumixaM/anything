@@ -18,8 +18,9 @@ class AvSpider(scrapy.Spider):
     allowed_domains = ['www5.javmost.com']
     
     def __init__(self):
-        uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
-        client = pymongo.MongoClient(uri)
+        # uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
+        # client = pymongo.MongoClient(uri)
+        client = pymongo.MongoClient(host='127.0.0.1', port=27017)
         av = client.javmost.av
         self.database = []
         result = av.aggregate([{"$group": {"_id": {"code": "$code"}}}])
@@ -28,7 +29,7 @@ class AvSpider(scrapy.Spider):
     
     def start_requests(self):
         suffix = "https://www5.javmost.com/showlist/new/{}/release/"
-        for i in range(0, 4349):
+        for i in range(0, 2):
             link = suffix.format(i)
             yield scrapy.Request(link, callback=self.list_parse)
     
@@ -43,6 +44,7 @@ class AvSpider(scrapy.Spider):
             item['code'] = card.xpath("div/a[1]/h4/text()").extract_first()
             if item['code'] in self.database:
                 item['title'] = "Crawled"
+                yield item
                 continue
             item['url'] = "https://www5.javmost.com/{}/".format(item['code'])
             item['title'] = card.xpath("div/a[2]/h5/text()").extract_first()
@@ -111,8 +113,9 @@ class AvSpider(scrapy.Spider):
                                  body=json.dumps(form),
                                  callback=self.form_requests,
                                  meta={"item": item,
-                                       "num": len(select_part) - 1,
+                                       "num": num - 1,
                                        "select_part": select_part,
                                        'form': form})
         if num == 0:
+            print('jhgghjggjh')
             yield item

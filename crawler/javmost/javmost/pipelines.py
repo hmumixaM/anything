@@ -9,9 +9,9 @@ import requests
 
 class JavmostPipeline(object):
     def __init__(self):
-        uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
-        client = pymongo.MongoClient(uri)
-        # client = pymongo.MongoClient(host='127.0.0.1', port=27017)
+        # uri = "mongodb+srv://hello:qweasdZxc1@jandan-l7bmq.gcp.mongodb.net/code?retryWrites=true&w=majority"
+        # client = pymongo.MongoClient(uri)
+        client = pymongo.MongoClient(host='127.0.0.1', port=27017)
         db = client.javmost
         self.list = db.av
         self.count = 0

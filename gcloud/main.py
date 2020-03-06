@@ -3,13 +3,13 @@ from flask import *
 from database import *
 from google.cloud import storage
 
-
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__, template_folder="templates")
 result, gif_num = find_gif(1)
-result, javmost_num =  find_javmost(1)
-javmost_num = int(javmost_num/12)
+result, javmost_num = find_javmost(1)
+javmost_num = javmost_num // 12
+
 
 @app.route('/')
 def hello():
@@ -42,26 +42,25 @@ def error():
     return redirect(url_for('hello'))
 
 
-@app.route('/mongo/<db>/<code>')
-def mongo(db, code):
-    return restful(db, code)
-
-
 @app.route('/gif')
 def other_gif():
     return redirect(url_for('gif', page=1))
+
 
 @app.route('/javmost')
 def other_javmost():
     return redirect(url_for('javmost', page=1))
 
+
 @app.route('/gif/')
 def other_gif_again():
     return redirect(url_for('gif', page=1))
 
+
 @app.route('/javmost/')
 def other_javmost_again():
     return redirect(url_for('javmost', page=1))
+
 
 @app.route('/gif/<page>')
 def gif(page):
@@ -70,15 +69,15 @@ def gif(page):
     page = int(page)
     if page <= 0 or page > gif_num:
         return redirect(url_for('gif', page=1))
-    result, max = find_gif(page-1)
+    result, max = find_gif(page - 1)
     title = result['title']
-    gifs = result['gif']
+    gifs = result['link']
     if page <= 4:
         pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     elif page > gif_num - 7:
         pages = range(gif_num, gif_num + 1)
     else:
-        pages = range(page-3, page+7)
+        pages = range(page - 3, page + 7)
     return render_template('gif.html', page=page, pages=pages, title=title, gifs=gifs)
 
 
@@ -95,7 +94,7 @@ def javmost(page):
     elif page > javmost_num - 8:
         pages = range(javmost_num - 10, javmost_num)
     else:
-        pages = range(page-3, page+7)
+        pages = range(page - 3, page + 7)
     return render_template('jav.html', page=page, pages=pages, videos=videos)
 
 
@@ -104,7 +103,8 @@ def code(code, order):
     videos = find_video(code)
     if videos == 'error':
         return "No video here."
-    return render_template('watch.html', code=code, link=videos['videos'], order=int(order), length=len(videos['videos']))
+    return render_template('watch.html', code=code, link=videos['videos'], order=int(order),
+                           length=len(videos['videos']))
 
 
 if __name__ == '__main__':
